@@ -1,12 +1,13 @@
 #include <GL/glut.h>
 #include<iostream>
+#include<stdio.h>
 
 using namespace std;
 
 bool condPairs(float x[][2],float y[][2]);
 
 int t;
-float xX = 0,yY = 0;
+float xX = 0,yY = 0; //pointer used to move the boxes
 
 GLfloat p[4][2] = {
 	{70.0,30.0},
@@ -187,7 +188,7 @@ bool condOverB()
 //pair wise checking of one box over the other box
 bool condPairs(float x[][2],float y[][2])
 {
-	if( x[0][0] == y[0][0] && x[0][1] == y[0][1] 		//A coordinates
+	if(x[0][0] == y[0][0] && x[0][1] == y[0][1] 			//A coordinates
 			&& x[1][0] == y[1][0] && x[1][1] == y[1][1]	//B coordinates 
 			&& x[2][0] == y[2][0] && x[2][1] == x[2][1]	//C coordinates
 			&& x[3][0] == y[3][0] && x[3][1] == y[3][1]	//D coordinates
@@ -195,26 +196,17 @@ bool condPairs(float x[][2],float y[][2])
 		return true;
 	else
 		return false;
-
 }
 
 bool win()
 {
-	for(int i=0;i<4;i++){
-		for(int j=0;j<2;j++){
-			if((b1[i][j]==g1[i][j] || b1[i][j]==g2[i][j] || b1[i][j]==g3[i][j])
-			&& (b2[i][j]==g1[i][j] || b2[i][j]==g2[i][j] || b2[i][j]==g3[i][j])
-			&& (b3[i][j]==g1[i][j] || b3[i][j]==g2[i][j] || b3[i][j]==g3[i][j])){
-
-				return true;
-
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
+	if((condPairs(b1,g1) || condPairs(b1,g2) || condPairs(b1,g3)) &&
+			(condPairs(b2,g1) || condPairs(b2,g2) || condPairs(b2,g3)) &&
+			(condPairs(b3,g1) || condPairs(b3,g2) || condPairs(b3,g3))
+	  )
+		return true;
+	else 
+		return false;
 }
 
 void display(void)
@@ -395,7 +387,7 @@ void display(void)
 		}
 
 	}
-	
+
 	if(win()==true){
 		cout<<" YOU WIN \n";
 	}
