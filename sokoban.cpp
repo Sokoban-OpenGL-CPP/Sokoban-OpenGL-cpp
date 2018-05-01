@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 #include<iostream>
 #include<stdio.h>
+#include<time.h>
 
 using namespace std;
 
@@ -8,6 +9,13 @@ bool condPairs(float x[][2],float y[][2]);
 
 int t;
 float xX = 0,yY = 0; //pointer used to move the boxes
+int screen = 1;
+
+int time_gap = 2;
+time_t sec = time (NULL);
+int start_time = (sec-1525195479) ;
+int end_time = (sec-1525195479) + time_gap ;
+int n_end_time = (sec-1525195479) + 2*time_gap ;
 
 GLfloat p[4][2] = {
 	{70.0,30.0},
@@ -66,13 +74,72 @@ GLfloat g3[4][2] = {
 	{75.0, 70.0}
 };
 
-
 int init(void)
 {
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	gluOrtho2D(0,100.0,0,100.0);
 }
 
+void drawLogo(string s, float x, float y)
+{
+	glRasterPos2f(x,y);
+	for (int c=0; c< s.size(); c++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24,s[c]);
+	}
+}
+
+void drawBitmapText(string s, float x, float y)
+{
+	glRasterPos2f(x,y);
+	for (int c=0; c< s.size(); c++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,s[c]);
+	}
+}
+
+void timerFunc(){
+	printf("Hello Timer Function\n");
+//	glClearColor(0.0,0.0,0.0,0.0);
+//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f(0.0,1.0,0.0);
+	drawBitmapText("Press Left Mouse Button To Start",30,50);
+	glFlush();
+	printf("\nStart Time: %d",start_time);
+	printf("\nEnd Time : %d",end_time);
+	if(end_time - start_time >=0)
+	{
+		time_t sec = time(NULL);
+		start_time = (sec-1525195479);
+		timerFunc();	
+	}
+	end_time = start_time + time_gap;
+	n
+//	glutTimerFunc(10000,timerFunc,1000);
+	glutPostRedisplay();
+	printf("\nBYE Timer Function\n");
+}
+
+void displayMenu(void){
+	glClearColor(0.0,0.0,0.0,0.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	if(time_value % 2 == 0)
+		glColor3f(1.0,0.0,0.0);
+//	else
+		glColor3f(0.0,1.0,0.0);
+	drawLogo("SOKOBAN",42,75);
+	drawBitmapText("A Box Game",42.5,70);
+//	glColor3f(0.0,1.0,0.0);
+//	drawBitmapText("Press Left Mouse Button To Start",30,50);
+	glColor3f(1.0,1.0,1.0);
+	drawBitmapText("Akhil Chouhan",18,25);
+	drawBitmapText("Akshat Trivedi",18,20);
+	drawBitmapText("1PE15CS012",68,25);
+	drawBitmapText("1PE15CS013",68,20);
+	glColor3f(0.0,1.0,0.0);
+	glFlush();
+//	glutPostRedisplay();
+}
 void motion(float a[4][2], float q, float w)
 {
 	for(int i=0;i<4;i++){
@@ -103,23 +170,33 @@ void keys()
 	}
 }
 
-void k(unsigned char key, int x, int y)
+void mouse(int btn,int state,int x,int y)
+{
+	if(btn == GLUT_LEFT_BUTTON)
+	{
+		screen++;
+		printf("\nEnter Key Pressed");
+		glutPostRedisplay();
+	}
+}
+
+void k(int key, int x, int y)
 {
 	switch (key)
 	{
-		case 'w':
+		case GLUT_KEY_UP :
 			t = 3;
 			glutPostRedisplay();
 			break;
-		case 'a':
+		case GLUT_KEY_LEFT :
 			t = 1;
 			glutPostRedisplay();
 			break;
-		case's':
+		case GLUT_KEY_DOWN :
 			t = 4;
 			glutPostRedisplay();
 			break;
-		case'd':
+		case GLUT_KEY_RIGHT :
 			t = 2;
 			glutPostRedisplay();
 			break;
@@ -209,7 +286,7 @@ bool win()
 		return false;
 }
 
-void display(void)
+void displayGame(void)
 {
 	xX = 0;
 	yY = 0;
@@ -314,10 +391,10 @@ void display(void)
 	if(condWall(b3)==true)
 		condMotion(b3,p);//box3
 
-	if(condWall(p)==true /*&& condOverP(p, b1, b2, b3)==true*/)
+	if(condWall(p)==true)
 		motion(p,xX,yY);//for player
 
-	if(condOverP()==true && condOverB()==true){
+	if(condOverP()==true && condOverB()==true){ //normal movement condtion
 		glBegin(GL_POLYGON); //b1
 		glColor3f(0.0, 1.0, 0.0);
 		for(int i = 0; i < 4 ;i++){
@@ -347,7 +424,7 @@ void display(void)
 		glEnd();
 
 	}
-	else
+	else //reach towards previous condition if next state is wrong
 	{
 		glBegin(GL_POLYGON); //b1
 		glColor3f(0.0, 1.0, 0.0);
@@ -392,8 +469,19 @@ void display(void)
 		cout<<" YOU WIN \n";
 	}
 	glEnable(GL_TEXTURE_2D);
-	glFlush();
+}
 
+void display(void){
+	printf("\nScreen:%d\n",screen);
+	if(screen==1){
+		displayMenu();
+//		glutTimerFunc(1000,timerFunc,0);
+		timerFunc();
+	}
+	else
+		displayGame();
+	glutSwapBuffers();
+	glFlush();
 }
 
 int main(int argc, char** argv)
@@ -404,7 +492,8 @@ int main(int argc, char** argv)
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Sokoban Solver");
 	init();
-	glutKeyboardFunc(k);
+	glutMouseFunc(mouse);
+	glutSpecialFunc(k);
 	glutDisplayFunc(display);
 	glutMainLoop();
 	return 0;
