@@ -114,7 +114,7 @@ void timerFunc(){
 		timerFunc();	
 	}
 	end_time = start_time + time_gap;
-	n
+
 //	glutTimerFunc(10000,timerFunc,1000);
 	glutPostRedisplay();
 	printf("\nBYE Timer Function\n");
