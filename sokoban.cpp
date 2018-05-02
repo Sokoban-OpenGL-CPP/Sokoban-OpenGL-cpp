@@ -99,7 +99,7 @@ void drawBitmapText(string s, float x, float y)
 }
 
 void timerFunc(){
-	printf("Hello Timer Function\n");
+/*	printf("Hello Timer Function\n");
 //	glClearColor(0.0,0.0,0.0,0.0);
 //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glColor3f(0.0,1.0,0.0);
@@ -118,6 +118,29 @@ void timerFunc(){
 //	glutTimerFunc(10000,timerFunc,1000);
 	glutPostRedisplay();
 	printf("\nBYE Timer Function\n");
+*/
+	int interval = end_time - start_time;
+	while(interval >=0)
+	{
+		printf("\nInterval 1 : %d",interval);
+	//	glClearColor(0.0,0.0,0.0,0.0);
+	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glColor3f(0.0,1.0,0.0);
+		drawBitmapText("Press Left Mouse Button To Start",30,50);
+		glFlush();
+		time_t sec = time(NULL);
+		start_time = sec - 1525195479;
+		interval = end_time - start_time;
+	}
+	int neg_time_gap = -time_gap;
+	while(interval >= neg_time_gap)
+	{
+		printf("\nInterval 2 : %d",interval);
+		time_t sec = time(NULL);
+		start_time = sec - 1525195479;
+		end_time = start_time + time_gap;
+	}
+	glutPostRedisplay();
 }
 
 void displayMenu(void){
