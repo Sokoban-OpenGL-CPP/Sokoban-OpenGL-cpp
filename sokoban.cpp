@@ -11,7 +11,7 @@ int t;
 float xX = 0,yY = 0; //pointer used to move the boxes
 int screen = 1;
 
-int time_gap = 2;
+int time_gap = 1;
 time_t sec = time (NULL);
 int start_time = (sec-1525195479) ;
 int end_time = (sec-1525195479) + time_gap ;
@@ -99,44 +99,21 @@ void drawBitmapText(string s, float x, float y)
 }
 
 void timerFunc(){
-/*	printf("Hello Timer Function\n");
-//	glClearColor(0.0,0.0,0.0,0.0);
-//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glColor3f(0.0,1.0,0.0);
-	drawBitmapText("Press Left Mouse Button To Start",30,50);
-	glFlush();
-	printf("\nStart Time: %d",start_time);
-	printf("\nEnd Time : %d",end_time);
-	if(end_time - start_time >=0)
-	{
-		time_t sec = time(NULL);
-		start_time = (sec-1525195479);
-		timerFunc();	
-	}
-	end_time = start_time + time_gap;
-//	glutTimerFunc(10000,timerFunc,1000);
-	glutPostRedisplay();
-	printf("\nBYE Timer Function\n");
-*/
 	printf("\nHELLO TIMER FUNCTION\n");
 	int interval = end_time - start_time;
 	while(interval > 0)
 	{
 		printf("\nInterval 1 : %d",interval);
-	//	glClearColor(0.0,0.0,0.0,0.0);
-	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glColor3f(0.0,1.0,0.0);
-		drawBitmapText("Press Left Mouse Button To Start",30,50);
-		glFlush();
 		time_t sec = time(NULL);
 		start_time = sec - 1525195479;
 		interval = end_time - start_time;
 	}
 	int neg_time_gap = -time_gap;
-	while(interval >= neg_time_gap)
+	while(interval > neg_time_gap)
 	{
 		glColor3f(0.0,0.0,1.0);
 		drawBitmapText("Press Left Mouse Button To Start",30,50);
+		glFlush();
 		printf("\nInterval 2 : %d",interval);
 		time_t sec = time(NULL);
 		start_time = sec - 1525195479;
@@ -144,19 +121,16 @@ void timerFunc(){
 	}
 	end_time = start_time + time_gap;
 	printf("\nBYE TIMER FUNCTION\n");
+	glutPostRedisplay();
 }
 
 void displayMenu(void){
 	glClearColor(0.0,0.0,0.0,0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//	if(time_value % 2 == 0)
-		glColor3f(1.0,0.0,0.0);
-//	else
-		glColor3f(0.0,1.0,0.0);
+	glColor3f(1.0,0.0,0.0);
+	glColor3f(0.0,1.0,0.0);
 	drawLogo("SOKOBAN",42,75);
 	drawBitmapText("A Box Game",42.5,70);
-//	glColor3f(0.0,1.0,0.0);
-//	drawBitmapText("Press Left Mouse Button To Start",30,50);
 	glColor3f(1.0,1.0,1.0);
 	drawBitmapText("Akhil Chouhan",18,25);
 	drawBitmapText("Akshat Trivedi",18,20);
@@ -164,7 +138,6 @@ void displayMenu(void){
 	drawBitmapText("1PE15CS013",68,20);
 	glColor3f(0.0,1.0,0.0);
 	glFlush();
-//	glutPostRedisplay();
 }
 void motion(float a[4][2], float q, float w)
 {
@@ -502,14 +475,12 @@ void display(void){
 	if(screen==1){
 		printf("\nHERE !!!!");
 		displayMenu();
-//		glutTimerFunc(1000,timerFunc,0);
 		timerFunc();
 	}
 	else
 		displayGame();
 	glutSwapBuffers();
 	glFlush();
-	glutPostRedisplay();
 }
 
 int main(int argc, char** argv)
