@@ -7,9 +7,16 @@ using namespace std;
 
 bool condPairs(float x[][2],float y[][2]);
 
-int t;
+int t,choice;
 float xX = 0,yY = 0; //pointer used to move the boxes
 int screen = 1;
+
+enum screenStates {
+	_playing = 0,
+	_win
+};
+
+screenStates state = _playing;
 
 int time_gap = 1;
 time_t sec = time (NULL);
@@ -97,7 +104,7 @@ void drawBitmapText(string s, float x, float y)
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,s[c]);
 	}
 }
-
+int bc =0;
 void timerFunc(){
 	printf("\nHELLO TIMER FUNCTION\n");
 	int interval = end_time - start_time;
@@ -120,6 +127,9 @@ void timerFunc(){
 		interval = end_time - start_time;
 	}
 	end_time = start_time + time_gap;
+	cout<<"end_time is "<<end_time<<endl;
+	if(end_time > 333508)
+		bc=1;
 	printf("\nBYE TIMER FUNCTION\n");
 	glutPostRedisplay();
 }
@@ -202,6 +212,10 @@ void k(int key, int x, int y)
 	}
 }
 
+void ku(unsigned char key, int x, int y)
+{
+	t=0;
+}
 //motion only for boxes
 
 void condMotion(float b[][2],float p[][2]){
@@ -287,187 +301,203 @@ bool win()
 
 void displayGame(void)
 {
-	xX = 0;
-	yY = 0;
+	if(state == _playing) {
+		xX = 0;
+		yY = 0;
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glBegin(GL_POLYGON); 	//w1
-	glColor3f(0.543, 0.0, 0.0);
-	glVertex2f(20.0, 80.0);
-	glVertex2f(20.0, 75.0);
-	glVertex2f(80.0, 75.0);
-	glVertex2f(80.0, 80.0);
-	glEnd();
+		glBegin(GL_POLYGON); 	//w1
+		glColor3f(0.543, 0.0, 0.0);
+		glVertex2f(20.0, 80.0);
+		glVertex2f(20.0, 75.0);
+		glVertex2f(80.0, 75.0);
+		glVertex2f(80.0, 80.0);
+		glEnd();
 
-	glBegin(GL_POLYGON);	//w2
-	glColor3f(0.543, 0.0, 0.0);
-	glVertex2f(20.0, 75.0);
-	glVertex2f(20.0, 25.0);
-	glVertex2f(25.0, 25.0);
-	glVertex2f(25.0, 75.0);
-	glEnd();
+		glBegin(GL_POLYGON);	//w2
+		glColor3f(0.543, 0.0, 0.0);
+		glVertex2f(20.0, 75.0);
+		glVertex2f(20.0, 25.0);
+		glVertex2f(25.0, 25.0);
+		glVertex2f(25.0, 75.0);
+		glEnd();
 
-	glBegin(GL_POLYGON);	//w3
-	glColor3f(0.543, 0.0, 0.0);
-	glVertex2f(20.0, 25.0);
-	glVertex2f(20.0, 20.0);
-	glVertex2f(80.0, 20.0);
-	glVertex2f(80.0, 25.0);
-	glEnd();
+		glBegin(GL_POLYGON);	//w3
+		glColor3f(0.543, 0.0, 0.0);
+		glVertex2f(20.0, 25.0);
+		glVertex2f(20.0, 20.0);
+		glVertex2f(80.0, 20.0);
+		glVertex2f(80.0, 25.0);
+		glEnd();
 
-	glBegin(GL_POLYGON);	//w4
-	glColor3f(0.543, 0.0, 0.0);
-	glVertex2f(75.0, 75.0);
-	glVertex2f(75.0, 25.0);
-	glVertex2f(80.0, 25.0);
-	glVertex2f(80.0, 75.0);
-	glEnd();
+		glBegin(GL_POLYGON);	//w4
+		glColor3f(0.543, 0.0, 0.0);
+		glVertex2f(75.0, 75.0);
+		glVertex2f(75.0, 25.0);
+		glVertex2f(80.0, 25.0);
+		glVertex2f(80.0, 75.0);
+		glEnd();
 
-	glBegin(GL_POLYGON);    //w5
-	glColor3f(0.543, 0.0, 0.0);
-	glVertex2f(50.0, 65.0);
-	glVertex2f(50.0, 60.0);
-	glVertex2f(75.0, 60.0);
-	glVertex2f(75.0, 65.0);
-	glEnd();
+		glBegin(GL_POLYGON);    //w5
+		glColor3f(0.543, 0.0, 0.0);
+		glVertex2f(50.0, 65.0);
+		glVertex2f(50.0, 60.0);
+		glVertex2f(75.0, 60.0);
+		glVertex2f(75.0, 65.0);
+		glEnd();
 
-	glBegin(GL_POLYGON);    //w6
-	glColor3f(0.543, 0.0, 0.0);
-	glVertex2f(25.0, 50.0);
-	glVertex2f(25.0, 45.0);
-	glVertex2f(50.0, 45.0);
-	glVertex2f(50.0, 50.0);
-	glEnd();
+		glBegin(GL_POLYGON);    //w6
+		glColor3f(0.543, 0.0, 0.0);
+		glVertex2f(25.0, 50.0);
+		glVertex2f(25.0, 45.0);
+		glVertex2f(50.0, 45.0);
+		glVertex2f(50.0, 50.0);
+		glEnd();
 
-	glBegin(GL_POLYGON);    //w7
-	glColor3f(0.543, 0.0, 0.0);
-	glVertex2f(45.0, 45.0);
-	glVertex2f(45.0, 35.0);
-	glVertex2f(50.0, 35.0);
-	glVertex2f(50.0, 45.0);
-	glEnd();
+		glBegin(GL_POLYGON);    //w7
+		glColor3f(0.543, 0.0, 0.0);
+		glVertex2f(45.0, 45.0);
+		glVertex2f(45.0, 35.0);
+		glVertex2f(50.0, 35.0);
+		glVertex2f(50.0, 45.0);
+		glEnd();
 
-	glBegin(GL_POLYGON);//g1
-	glColor3f(0.0, 0.0, 1.0);
-	for(int i = 0; i < 4 ;i++){
-		glVertex2fv(g1[i]);
-	}
-	glEnd();
-
-	glBegin(GL_POLYGON);    //g2
-	glColor3f(0.0, 0.0, 1.0);
-	for(int i = 0; i < 4 ;i++){
-		glVertex2fv(g2[i]);
-	}
-	glEnd();
-
-	glBegin(GL_POLYGON);    //g3
-	glColor3f(0.0, 0.0, 1.0);
-	for(int i = 0; i < 4 ;i++){
-		glVertex2fv(g3[i]);
-	}
-
-	glEnd();
-
-	for(int i=0;i<4;i++){
-		for(int j=0;j<2;j++){
-			Rp[i][j]=p[i][j];
-			Rb1[i][j]=b1[i][j];
-			Rb2[i][j]=b2[i][j];
-			Rb3[i][j]=b3[i][j];
-		}
-	}
-
-	keys();
-
-	if(condWall(b1)==true)
-		condMotion(b1,p);//box1
-
-	if(condWall(b2)==true)
-		condMotion(b2,p);//box2
-
-	if(condWall(b3)==true)
-		condMotion(b3,p);//box3
-
-	if(condWall(p)==true)
-		motion(p,xX,yY);//for player
-
-	if(condOverP()==true && condOverB()==true){ //normal movement condtion
-		glBegin(GL_POLYGON); //b1
-		glColor3f(0.0, 1.0, 0.0);
+		glBegin(GL_POLYGON);//g1
+		glColor3f(0.0, 0.0, 1.0);
 		for(int i = 0; i < 4 ;i++){
-			glVertex2fv(b1[i]);
+			glVertex2fv(g1[i]);
 		}
 		glEnd();
 
-		glBegin(GL_POLYGON); //b2
-		glColor3f(0.0, 1.0, 0.0);
-		for(int i = 0; i < 4; i++){
-			glVertex2fv(b2[i]);
-		}
-		glEnd();
-
-		glBegin(GL_POLYGON); //b3
-		glColor3f(0.0, 1.0, 0.0);
-		for(int i = 0; i < 4; i++){
-			glVertex2fv(b3[i]);
-		}
-		glEnd();
-
-		glBegin(GL_POLYGON); //p
-		glColor3f(1.0, 0.5, 0.0);
+		glBegin(GL_POLYGON);    //g2
+		glColor3f(0.0, 0.0, 1.0);
 		for(int i = 0; i < 4 ;i++){
-			glVertex2fv(p[i]);
+			glVertex2fv(g2[i]);
 		}
 		glEnd();
 
-	}
-	else //reach towards previous condition if next state is wrong
-	{
-		glBegin(GL_POLYGON); //b1
-		glColor3f(0.0, 1.0, 0.0);
+		glBegin(GL_POLYGON);    //g3
+		glColor3f(0.0, 0.0, 1.0);
 		for(int i = 0; i < 4 ;i++){
-			glVertex2fv(Rb1[i]);
+			glVertex2fv(g3[i]);
 		}
-		glEnd();
 
-		glBegin(GL_POLYGON); //b2
-		glColor3f(0.0, 1.0, 0.0);
-		for(int i = 0; i < 4; i++){
-			glVertex2fv(Rb2[i]);
-		}
-		glEnd();
-
-		glBegin(GL_POLYGON); //b3
-		glColor3f(0.0, 1.0, 0.0);
-		for(int i = 0; i < 4; i++){
-			glVertex2fv(Rb3[i]);
-		}
-		glEnd();
-
-		glBegin(GL_POLYGON); //p
-		glColor3f(1.0, 0.5, 0.0);
-		for(int i = 0; i < 4 ;i++){
-			glVertex2fv(Rp[i]);
-		}
 		glEnd();
 
 		for(int i=0;i<4;i++){
 			for(int j=0;j<2;j++){
-				p[i][j]=Rp[i][j];
-				b1[i][j]=Rb1[i][j];
-				b2[i][j]=Rb2[i][j];
-				b3[i][j]=Rb3[i][j];
+				Rp[i][j]=p[i][j];
+				Rb1[i][j]=b1[i][j];
+				Rb2[i][j]=b2[i][j];
+				Rb3[i][j]=b3[i][j];
 			}
 		}
 
+		keys();
+
+		if(condWall(b1)==true)
+			condMotion(b1,p);//box1
+
+		if(condWall(b2)==true)
+			condMotion(b2,p);//box2
+
+		if(condWall(b3)==true)
+			condMotion(b3,p);//box3
+
+		if(condWall(p)==true /*&& condOverP(p, b1, b2, b3)==true*/)
+			motion(p,xX,yY);//for player
+
+		if(condOverP()==true && condOverB()==true){
+			glBegin(GL_POLYGON); //b1
+			glColor3f(0.0, 1.0, 0.0);
+			for(int i = 0; i < 4 ;i++){
+				glVertex2fv(b1[i]);
+			}
+			glEnd();
+
+			glBegin(GL_POLYGON); //b2
+			glColor3f(0.0, 1.0, 0.0);
+			for(int i = 0; i < 4; i++){
+				glVertex2fv(b2[i]);
+			}
+			glEnd();
+
+			glBegin(GL_POLYGON); //b3
+			glColor3f(0.0, 1.0, 0.0);
+			for(int i = 0; i < 4; i++){
+				glVertex2fv(b3[i]);
+			}
+			glEnd();
+
+			glBegin(GL_POLYGON); //p
+			glColor3f(1.0, 0.5, 0.0);
+			for(int i = 0; i < 4 ;i++){
+				glVertex2fv(p[i]);
+			}
+			glEnd();
+
+		}
+		else
+		{
+			glBegin(GL_POLYGON); //b1
+			glColor3f(0.0, 1.0, 0.0);
+			for(int i = 0; i < 4 ;i++){
+				glVertex2fv(Rb1[i]);
+			}
+			glEnd();
+
+			glBegin(GL_POLYGON); //b2
+			glColor3f(0.0, 1.0, 0.0);
+			for(int i = 0; i < 4; i++){
+				glVertex2fv(Rb2[i]);
+			}
+			glEnd();
+
+			glBegin(GL_POLYGON); //b3
+			glColor3f(0.0, 1.0, 0.0);
+			for(int i = 0; i < 4; i++){
+				glVertex2fv(Rb3[i]);
+			}
+			glEnd();
+
+			glBegin(GL_POLYGON); //p
+			glColor3f(1.0, 0.5, 0.0);
+			for(int i = 0; i < 4 ;i++){
+				glVertex2fv(Rp[i]);
+			}
+			glEnd();
+
+			for(int i=0;i<4;i++){
+				for(int j=0;j<2;j++){
+					p[i][j]=Rp[i][j];
+					b1[i][j]=Rb1[i][j];
+					b2[i][j]=Rb2[i][j];
+					b3[i][j]=Rb3[i][j];
+				}
+			}
+
+		}
+	}
+	if(win() == true){
+		state = _win;
 	}
 
-	if(win()==true){
-		cout<<" YOU WIN \n";
+	if(state == _win) {
+		glClearColor(0.0,0.0,0.0,1.0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glColor3f(0.0,1.0,0.0);
+		if(bc=0){
+		drawLogo("CONGRATULATIONS YOU WIN",22,55);
+		}
+		else{
+			drawLogo("TIME EXCEEDED    YOU LOSE",22,55);
+		}
+		glutSwapBuffers();
+		glFlush();
 	}
 	glEnable(GL_TEXTURE_2D);
+	glFlush();
 }
 
 void display(void){
@@ -482,7 +512,57 @@ void display(void){
 	glutSwapBuffers();
 	glFlush();
 }
+void bchoice(){
 
+	p[0][0]=70;
+	p[0][1]=30;
+	p[1][0]=70;
+	p[1][1]=25;
+	p[2][0]=75;
+	p[2][1]=25;
+	p[3][0]=75;
+	p[3][1]=30;
+
+	b1[0][0]=50;
+	b1[0][1]=45;
+	b1[1][0]=50;
+	b1[1][1]=40;
+	b1[2][0]=55;
+	b1[2][1]=40;
+	b1[3][0]=55;
+	b1[3][1]=45; 
+
+	b2[0][0]=60;
+	b2[0][1]=45;
+	b2[1][0]=60;
+	b2[1][1]=40;
+	b2[2][0]=65;
+	b2[2][1]=40;
+	b2[3][0]=65;
+	b2[3][1]=45;
+
+	b3[0][0]=65;
+	b3[0][1]=45;
+	b3[1][0]=65;
+	b3[1][1]=40;
+	b3[2][0]=70;
+	b3[2][1]=40;
+	b3[3][0]=70;
+	b3[3][1]=45;
+
+}
+void demo_menu(int id){
+	switch(id){
+		case 1:	exit(0);
+			break;
+		case 2: choice=2;
+			break;
+	}
+	if(choice==2){
+		bchoice();	
+	}
+	glutPostRedisplay();
+}
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -490,10 +570,18 @@ int main(int argc, char** argv)
 	glutInitWindowSize(700, 700);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Sokoban Solver");
+	glutCreateMenu(demo_menu);
+	glutAddMenuEntry("EXIT",1);
+	glutAddMenuEntry("RESET",2);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
 	init();
 	glutMouseFunc(mouse);
 	glutSpecialFunc(k);
+	//glutKeyboardFunc(k);
+	glutKeyboardUpFunc(ku);
 	glutDisplayFunc(display);
+	//myTimer(0);
+	//glutFullScreen();
 	glutMainLoop();
 	return 0;
 }
