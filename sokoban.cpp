@@ -417,14 +417,14 @@ void displayGame(void)
 			glEnd();
 
 			glBegin(GL_POLYGON); //b2
-			glColor3f(0.0, 1.0, 0.0);
+			glColor3f(1.0, 1.0, 0.0);
 			for(int i = 0; i < 4; i++){
 				glVertex2fv(b2[i]);
 			}
 			glEnd();
 
 			glBegin(GL_POLYGON); //b3
-			glColor3f(0.0, 1.0, 0.0);
+			glColor3f(0.95, 0.95, 0.95);
 			for(int i = 0; i < 4; i++){
 				glVertex2fv(b3[i]);
 			}
@@ -448,7 +448,7 @@ void displayGame(void)
 			glEnd();
 
 			glBegin(GL_POLYGON); //b2
-			glColor3f(0.0, 1.0, 0.0);
+			glColor3f(1.0, 1.0, 0.0);
 			for(int i = 0; i < 4; i++){
 				glVertex2fv(Rb2[i]);
 			}
@@ -487,12 +487,12 @@ void displayGame(void)
 		glClearColor(0.0,0.0,0.0,1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glColor3f(0.0,1.0,0.0);
-		if(bc=0){
+		//if(bc=0){
 		drawLogo("CONGRATULATIONS YOU WIN",22,55);
-		}
-		else{
+		//}
+		/*else{
 			drawLogo("TIME EXCEEDED    YOU LOSE",22,55);
-		}
+		}*/
 		glutSwapBuffers();
 		glFlush();
 	}
@@ -577,11 +577,8 @@ int main(int argc, char** argv)
 	init();
 	glutMouseFunc(mouse);
 	glutSpecialFunc(k);
-	//glutKeyboardFunc(k);
 	glutKeyboardUpFunc(ku);
 	glutDisplayFunc(display);
-	//myTimer(0);
-	//glutFullScreen();
 	glutMainLoop();
 	return 0;
 }
