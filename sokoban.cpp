@@ -6,10 +6,12 @@
 using namespace std;
 
 bool condPairs(float x[][2],float y[][2]);
+void instructions();
 
 int t,choice;
 float xX = 0,yY = 0; //pointer used to move the boxes
 int screen = 1;
+int ins_screen = 0;
 
 enum screenStates {
 	_playing = 0,
@@ -106,11 +108,11 @@ void drawBitmapText(string s, float x, float y)
 }
 int bc =0;
 void timerFunc(){
-	printf("\nHELLO TIMER FUNCTION\n");
+	//printf("\nHELLO TIMER FUNCTION\n");
 	int interval = end_time - start_time;
 	while(interval > 0)
 	{
-		printf("\nInterval 1 : %d",interval);
+	//	printf("\nInterval 1 : %d",interval);
 		time_t sec = time(NULL);
 		start_time = sec - 1525195479;
 		interval = end_time - start_time;
@@ -120,8 +122,10 @@ void timerFunc(){
 	{
 		glColor3f(0.0,0.0,1.0);
 		drawBitmapText("Press Left Mouse Button To Start",30,50);
+		glColor3f(1.0,1.0,0.0);
+		drawBitmapText("Press i for Instructions",30,45);
 		glFlush();
-		printf("\nInterval 2 : %d",interval);
+	//	printf("\nInterval 2 : %d",interval);
 		time_t sec = time(NULL);
 		start_time = sec - 1525195479;
 		interval = end_time - start_time;
@@ -130,7 +134,7 @@ void timerFunc(){
 	cout<<"end_time is "<<end_time<<endl;
 	if(end_time > 333508)
 		bc=1;
-	printf("\nBYE TIMER FUNCTION\n");
+	//printf("\nBYE TIMER FUNCTION\n");
 	glutPostRedisplay();
 }
 
@@ -178,6 +182,19 @@ void keys()
 			break;
 	}
 }
+
+void alphaKeys(unsigned char key,int x,int y)
+{
+	switch(key){
+		case 'i':
+		case 'I':
+			printf("\nINSTRUCTIONS SELECTION\n");
+			ins_screen++;
+			glutPostRedisplay();
+		break;
+	}
+}
+
 
 void mouse(int btn,int state,int x,int y)
 {
@@ -405,7 +422,7 @@ void displayGame(void)
 		if(condWall(b3)==true)
 			condMotion(b3,p);//box3
 
-		if(condWall(p)==true /*&& condOverP(p, b1, b2, b3)==true*/)
+		if(condWall(p)==true)
 			motion(p,xX,yY);//for player
 
 		if(condOverP()==true && condOverB()==true){
@@ -504,8 +521,16 @@ void display(void){
 	printf("\nScreen:%d\n",screen);
 	if(screen==1){
 		printf("\nHERE !!!!");
-		displayMenu();
-		timerFunc();
+		if(ins_screen % 2 !=0)
+		{
+			printf("\nINSTRUCTIONS\n");
+			instructions();
+		}
+		else
+		{
+			displayMenu();
+			timerFunc();
+		}
 	}
 	else
 		displayGame();
@@ -551,6 +576,7 @@ void bchoice(){
 	b3[3][1]=45;
 
 }
+
 void demo_menu(int id){
 	switch(id){
 		case 1:	exit(0);
@@ -561,6 +587,23 @@ void demo_menu(int id){
 	if(choice==2){
 		bchoice();	
 	}
+}
+
+void instructions(){
+	glClearColor(0.0,0.0,0.0,1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f(1.0,0.0,1.0);
+	drawLogo("INSTRUCTIONS",38,90);
+	glColor3f(0.0,1.0,1.0);
+	drawBitmapText("* A player has to move all the boxes from it's initial state towards the",10,80);
+	drawBitmapText("  goal state.",10,76);
+	drawBitmapText("* The purple squares are the goal state and boxes are green.",10,68);
+	drawBitmapText("* The player and the boxes are movable either vertically or horizontally.",10,61);
+	drawBitmapText("* Right Click to Reset and Exit.",10,54);
+	drawBitmapText("* CONTROLS: ARROW KEYS AND RIGHT CLICK.",10,47);
+	glColor3f(1.0,1.0,0.0);
+	drawBitmapText("PRESS i to go BACK.",38,10);
+	glFlush();
 	glutPostRedisplay();
 }
 int main(int argc, char** argv)
@@ -577,8 +620,11 @@ int main(int argc, char** argv)
 	init();
 	glutMouseFunc(mouse);
 	glutSpecialFunc(k);
+	glutKeyboardFunc(alphaKeys);
 	glutKeyboardUpFunc(ku);
 	glutDisplayFunc(display);
+	//myTimer(0);
+	//glutFullScreen();
 	glutMainLoop();
 	return 0;
 }
