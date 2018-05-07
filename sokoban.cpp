@@ -2,7 +2,6 @@
 #include<iostream>
 #include<stdio.h>
 #include<time.h>
-#include<string.h>
 
 using namespace std;
 
@@ -190,56 +189,60 @@ void keys()
 			break;
 	}
 }
-
 void alphaKeys(unsigned char key,int x,int y)
 {
-	switch(key){
-		case 'i':
-		case 'I':
-			printf("\nINSTRUCTIONS SELECTION\n");
-			ins_screen++;
-			glutPostRedisplay();
-			break;
+	if(win_flag == 0){
+		switch(key){
+			case 'i':
+			case 'I':
+				printf("\nINSTRUCTIONS SELECTION\n");
+				ins_screen++;
+				glutPostRedisplay();
+				break;
+		}
 	}
 }
 
-
 void mouse(int btn,int state,int x,int y)
 {
-	if(btn == GLUT_LEFT_BUTTON)
+	if(win_flag == 0)
 	{
-		screen++;
-		printf("\nEnter Key Pressed");
-		glutPostRedisplay();
+		if(btn == GLUT_LEFT_BUTTON)
+		{
+			screen++;
+			printf("\nEnter Key Pressed");
+			glutPostRedisplay();
+		}
 	}
 }
 
 void k(int key, int x, int y)
 {
 	if(win_flag == 0){
-	switch (key)
-	{
-		case GLUT_KEY_UP :
-			t = 3;
-			steps++;
-			glutPostRedisplay();
-			break;
-		case GLUT_KEY_LEFT :
-			t = 1;
-			steps++;
-			glutPostRedisplay();
-			break;
-		case GLUT_KEY_DOWN :
-			t = 4;
-			steps++;
-			glutPostRedisplay();
-			break;
-		case GLUT_KEY_RIGHT :
-			t = 2;
-			steps++;
-			glutPostRedisplay();
-			break;
-	}}
+		switch (key)
+		{
+			case GLUT_KEY_UP :
+				t = 3;
+				steps++;
+				glutPostRedisplay();
+				break;
+			case GLUT_KEY_LEFT :
+				t = 1;
+				steps++;
+				glutPostRedisplay();
+				break;
+			case GLUT_KEY_DOWN :
+				t = 4;
+				steps++;
+				glutPostRedisplay();
+				break;
+			case GLUT_KEY_RIGHT :
+				t = 2;
+				steps++;
+				glutPostRedisplay();
+				break;
+		}
+	}
 }
 
 void ku(unsigned char key, int x, int y)
@@ -634,9 +637,9 @@ void bchoice(){
 void demo_menu(int id){
 	switch(id){
 		case 1:	exit(0);
-			break;
+		break;
 		case 2: choice=2;
-			break;
+		break;
 	}
 	if(choice==2){
 		bchoice();
