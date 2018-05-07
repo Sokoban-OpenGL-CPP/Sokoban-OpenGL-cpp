@@ -2,6 +2,7 @@
 #include<iostream>
 #include<stdio.h>
 #include<time.h>
+#include<string.h>
 
 using namespace std;
 
@@ -12,6 +13,13 @@ int t,choice;
 float xX = 0,yY = 0; //pointer used to move the boxes
 int screen = 1;
 int ins_screen = 0;
+
+char s[1000];	     //To display the score
+int each_step = 10;
+int score = 1000 + each_step;
+int steps = 0;
+int g1_flag=0 , g2_flag=0 , g3_flag=0;
+int win_flag = 0;
 
 enum screenStates {
 	_playing = 0,
@@ -112,7 +120,7 @@ void timerFunc(){
 	int interval = end_time - start_time;
 	while(interval > 0)
 	{
-	//	printf("\nInterval 1 : %d",interval);
+		//	printf("\nInterval 1 : %d",interval);
 		time_t sec = time(NULL);
 		start_time = sec - 1525195479;
 		interval = end_time - start_time;
@@ -125,7 +133,7 @@ void timerFunc(){
 		glColor3f(1.0,1.0,0.0);
 		drawBitmapText("Press i for Instructions",30,45);
 		glFlush();
-	//	printf("\nInterval 2 : %d",interval);
+		//	printf("\nInterval 2 : %d",interval);
 		time_t sec = time(NULL);
 		start_time = sec - 1525195479;
 		interval = end_time - start_time;
@@ -191,7 +199,7 @@ void alphaKeys(unsigned char key,int x,int y)
 			printf("\nINSTRUCTIONS SELECTION\n");
 			ins_screen++;
 			glutPostRedisplay();
-		break;
+			break;
 	}
 }
 
@@ -208,25 +216,30 @@ void mouse(int btn,int state,int x,int y)
 
 void k(int key, int x, int y)
 {
+	if(win_flag == 0){
 	switch (key)
 	{
 		case GLUT_KEY_UP :
 			t = 3;
+			steps++;
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_LEFT :
 			t = 1;
+			steps++;
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_DOWN :
 			t = 4;
+			steps++;
 			glutPostRedisplay();
 			break;
 		case GLUT_KEY_RIGHT :
 			t = 2;
+			steps++;
 			glutPostRedisplay();
 			break;
-	}
+	}}
 }
 
 void ku(unsigned char key, int x, int y)
@@ -318,11 +331,39 @@ bool win()
 
 void displayGame(void)
 {
+	if((condPairs(b1,g1) || condPairs(b1,g2) || condPairs(b1,g3)) && g1_flag==0)
+	{
+		score = score + 500;
+		g1_flag = 1;
+	}
+	
+	if((condPairs(b2,g1) || condPairs(b2,g2) || condPairs(b2,g3)) && g2_flag==0)
+	{	
+		score = score + 500;
+		g2_flag = 1;
+	}
+
+	if((condPairs(b3,g1) || condPairs(b3,g2) || condPairs(b3,g3)) && g3_flag==0)
+	{
+		score = score + 500;
+		g3_flag = 1;
+	}
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f(1.0,0.0,0.0);
+	drawLogo("STEPS",10,90);
+	sprintf(s,"%d",steps);
+	drawLogo(s,14,84);
+
+	drawLogo("SCORE",80,90);
+	score = score - each_step;
+	sprintf(s,"%d",score);
+	drawLogo(s,82,84);	
+
 	if(state == _playing) {
 		xX = 0;
 		yY = 0;
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glBegin(GL_POLYGON); 	//w1
 		glColor3f(0.543, 0.0, 0.0);
@@ -501,6 +542,7 @@ void displayGame(void)
 	}
 
 	if(state == _win) {
+		win_flag = 1;
 		glClearColor(0.0,0.0,0.0,1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glColor3f(0.0,1.0,0.0);
@@ -508,8 +550,20 @@ void displayGame(void)
 		drawLogo("CONGRATULATIONS YOU WIN",22,55);
 		//}
 		/*else{
-			drawLogo("TIME EXCEEDED    YOU LOSE",22,55);
-		}*/
+		  drawLogo("TIME EXCEEDED    YOU LOSE",22,55);
+		  }*/
+
+		drawLogo("FINAL",47,47);
+		glColor3f(1.0,0.0,0.0);
+	        drawLogo("STEPS",25,42);
+	        sprintf(s,"%d",steps);
+	        drawLogo(s,28,36);
+
+		drawLogo("SCORE",75,42);
+	        sprintf(s,"%d",score);
+	        drawLogo(s,77,36);
+
+
 		glutSwapBuffers();
 		glFlush();
 	}
@@ -585,7 +639,9 @@ void demo_menu(int id){
 			break;
 	}
 	if(choice==2){
-		bchoice();	
+		bchoice();
+		steps = 0;
+		score = 1000 + each_step;
 	}
 }
 
