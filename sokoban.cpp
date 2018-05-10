@@ -7,6 +7,9 @@ using namespace std;
 
 bool condPairs(float x[][2],float y[][2]);
 void instructions();
+void displayWin();
+void readHighScore();
+void writeHighScore();
 
 int t,choice;
 float xX = 0,yY = 0; //pointer used to move the boxes
@@ -19,6 +22,7 @@ int score = 1000 + each_step;
 int steps = 0;
 int g1_flag=0 , g2_flag=0 , g3_flag=0;
 int win_flag = 0;
+int highScore = 0;
 
 enum screenStates {
 	_playing = 0,
@@ -94,6 +98,7 @@ int init(void)
 {
 	glClearColor(1.0, 1.0, 1.0, 0.0);
 	gluOrtho2D(0,100.0,0,100.0);
+	readHighScore();
 }
 
 void drawLogo(string s, float x, float y)
@@ -158,6 +163,8 @@ void displayMenu(void){
 	drawBitmapText("1PE15CS012",68,25);
 	drawBitmapText("1PE15CS013",68,20);
 	glColor3f(0.0,1.0,0.0);
+	sprintf(s,"Highscore : %d", highScore);
+	drawLogo(s, 40, 10);
 	glFlush();
 }
 void motion(float a[4][2], float q, float w)
@@ -339,7 +346,7 @@ void displayGame(void)
 		score = score + 500;
 		g1_flag = 1;
 	}
-	
+
 	if((condPairs(b2,g1) || condPairs(b2,g2) || condPairs(b2,g3)) && g2_flag==0)
 	{	
 		score = score + 500;
@@ -545,34 +552,44 @@ void displayGame(void)
 	}
 
 	if(state == _win) {
-		win_flag = 1;
-		glClearColor(0.0,0.0,0.0,1.0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glColor3f(0.0,1.0,0.0);
-		//if(bc=0){
-		drawLogo("CONGRATULATIONS YOU WIN",22,55);
-		//}
-		/*else{
-		  drawLogo("TIME EXCEEDED    YOU LOSE",22,55);
-		  }*/
-
-		drawLogo("FINAL",47,47);
-		glColor3f(1.0,0.0,0.0);
-	        drawLogo("STEPS",25,42);
-	        sprintf(s,"%d",steps);
-	        drawLogo(s,28,36);
-
-		drawLogo("SCORE",75,42);
-	        sprintf(s,"%d",score);
-	        drawLogo(s,77,36);
-
-
-		glutSwapBuffers();
-		glFlush();
+		displayWin();
 	}
 	glEnable(GL_TEXTURE_2D);
 	glFlush();
 }
+
+void displayWin(){
+	win_flag = 1;
+	glClearColor(0.0,0.0,0.0,1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f(0.0,1.0,0.0);
+	//if(bc=0){
+	drawLogo("CONGRATULATIONS YOU WIN",22,55);
+	//}
+	/*else{
+	  drawLogo("TIME EXCEEDED    YOU LOSE",22,55);
+	  }*/
+
+	drawLogo("FINAL",47,47);
+	glColor3f(1.0,0.0,0.0);
+	drawLogo("STEPS",25,42);
+	sprintf(s,"%d",steps);
+	drawLogo(s,28,36);
+
+	drawLogo("SCORE",75,42);
+	sprintf(s,"%d",score);
+	if(score > highScore) {
+		highScore = score;
+		writeHighScore();
+		drawLogo("New Record", 75, 30);
+	}
+	drawLogo(s,77,36);
+	sprintf(s,"Highscore : %d", highScore);
+	drawLogo(s, 40, 10);
+	glutSwapBuffers();
+	glFlush();
+}
+
 
 void display(void){
 	printf("\nScreen:%d\n",screen);
@@ -637,9 +654,9 @@ void bchoice(){
 void demo_menu(int id){
 	switch(id){
 		case 1:	exit(0);
-		break;
+			break;
 		case 2: choice=2;
-		break;
+			break;
 	}
 	if(choice==2){
 		bchoice();
@@ -656,7 +673,7 @@ void instructions(){
 	glColor3f(0.0,1.0,1.0);
 	drawBitmapText("* A player has to move all the boxes from it's initial state towards the",10,80);
 	drawBitmapText("  goal state.",10,76);
-	drawBitmapText("* The blue squares are the goal state and boxes are green.",10,68);
+	drawBitmapText("* The blue squares are the goal state and boxes are of different colours.",10,68);
 	drawBitmapText("* The player and the boxes are movable either vertically or horizontally.",10,61);
 	drawBitmapText("* Right Click to Reset and Exit.",10,54);
 	drawBitmapText("* CONTROLS: ARROW KEYS AND RIGHT CLICK.",10,47);
@@ -665,6 +682,22 @@ void instructions(){
 	glFlush();
 	glutPostRedisplay();
 }
+
+void readHighScore() {
+	FILE *f = fopen("highscores.txt", "r");
+	fscanf(f, "%d", &highScore);
+	printf("\nHighscore : %d\n", highScore);
+	fclose(f);
+}
+
+void writeHighScore() {
+	FILE * f = fopen("highscores.txt", "w");
+	fprintf(f, "%d", highScore);
+	fclose(f);
+	printf("\nWriting highscore : %d", highScore);
+}
+
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
