@@ -516,7 +516,7 @@ void displayGame(void)
 			glEnd();
 
 			glBegin(GL_POLYGON); //b3
-			glColor3f(0.0, 1.0, 0.0);
+			glColor3f(0.95, 0.95, 0.95);
 			for(int i = 0; i < 4; i++){
 				glVertex2fv(Rb3[i]);
 			}
@@ -656,7 +656,7 @@ void instructions(){
 	glColor3f(0.0,1.0,1.0);
 	drawBitmapText("* A player has to move all the boxes from it's initial state towards the",10,80);
 	drawBitmapText("  goal state.",10,76);
-	drawBitmapText("* The purple squares are the goal state and boxes are green.",10,68);
+	drawBitmapText("* The blue squares are the goal state and boxes are green.",10,68);
 	drawBitmapText("* The player and the boxes are movable either vertically or horizontally.",10,61);
 	drawBitmapText("* Right Click to Reset and Exit.",10,54);
 	drawBitmapText("* CONTROLS: ARROW KEYS AND RIGHT CLICK.",10,47);
