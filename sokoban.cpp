@@ -24,6 +24,7 @@ int g1_flag=0 , g2_flag=0 , g3_flag=0;
 int win_flag = 0;
 int highScore = 0;
 
+
 enum screenStates {
 	_playing = 0,
 	_win
@@ -33,9 +34,10 @@ screenStates state = _playing;
 
 int time_gap = 1;
 time_t sec = time (NULL);
-int start_time = (sec-1525195479) ;
-int end_time = (sec-1525195479) + time_gap ;
-int n_end_time = (sec-1525195479) + 2*time_gap ;
+time_t initTime = time(NULL);
+int start_time = (sec - initTime) ;
+int end_time = (sec - initTime) + time_gap ;
+int n_end_time = (sec - initTime) + 2*time_gap ;
 
 GLfloat p[4][2] = {
 	{70.0,30.0},
@@ -126,7 +128,7 @@ void timerFunc(){
 	{
 		//	printf("\nInterval 1 : %d",interval);
 		time_t sec = time(NULL);
-		start_time = sec - 1525195479;
+		start_time = sec - initTime;
 		interval = end_time - start_time;
 	}
 	int neg_time_gap = -time_gap;
@@ -139,13 +141,11 @@ void timerFunc(){
 		glFlush();
 		//	printf("\nInterval 2 : %d",interval);
 		time_t sec = time(NULL);
-		start_time = sec - 1525195479;
+		start_time = sec - initTime;
 		interval = end_time - start_time;
 	}
 	end_time = start_time + time_gap;
-	cout<<"end_time is "<<end_time<<endl;
-	if(end_time > 333508)
-		bc=1;
+	cout<<"TIME: "<<end_time - 3<<endl;
 	//printf("\nBYE TIMER FUNCTION\n");
 	glutPostRedisplay();
 }
@@ -217,7 +217,7 @@ void mouse(int btn,int state,int x,int y)
 		if(btn == GLUT_LEFT_BUTTON)
 		{
 			screen++;
-			printf("\nEnter Key Pressed");
+			printf("\nMouse Button Pressed");
 			glutPostRedisplay();
 		}
 	}
@@ -581,7 +581,7 @@ void displayWin(){
 	if(score > highScore) {
 		highScore = score;
 		writeHighScore();
-		drawLogo("New Record", 75, 30);
+		drawLogo("New Record !", 75, 30);
 	}
 	drawLogo(s,77,36);
 	sprintf(s,"Highscore : %d", highScore);
@@ -592,9 +592,7 @@ void displayWin(){
 
 
 void display(void){
-	printf("\nScreen:%d\n",screen);
 	if(screen==1){
-		printf("\nHERE !!!!");
 		if(ins_screen % 2 !=0)
 		{
 			printf("\nINSTRUCTIONS\n");
