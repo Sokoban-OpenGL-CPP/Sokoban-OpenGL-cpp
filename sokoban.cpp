@@ -123,6 +123,7 @@ void drawBitmapText(string s, float x, float y)
 int bc =0;
 void timerFunc(){
 	//printf("\nHELLO TIMER FUNCTION\n");
+	printf("Hello Author!!");
 	int interval = end_time - start_time;
 	while(interval > 0)
 	{
